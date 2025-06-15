@@ -1,11 +1,14 @@
 "use client"
 
+import type React from "react"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Play, Heart, TrendingUp } from "lucide-react"
 import { useState } from "react"
+import { usePlayback } from "@/contexts/playback-context"
 
 interface Track {
   id: string
@@ -23,6 +26,21 @@ interface TrackCardProps {
 export function TrackCard({ track }: TrackCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
+  const { dispatch } = usePlayback()
+
+  const handlePlay = (e: React.MouseEvent) => {
+    e.preventDefault()
+
+    const trackForContext = {
+      id: track.id,
+      title: track.title,
+      artist: { id: "artist-1", name: track.artist, avatar: "/placeholder.svg" },
+      coverArt: track.coverArt,
+      duration: 222, // You'd get this from actual track data
+    }
+
+    dispatch({ type: "PLAY_TRACK", track: trackForContext })
+  }
 
   return (
     <Card
@@ -54,10 +72,7 @@ export function TrackCard({ track }: TrackCardProps) {
               <Button
                 size="icon"
                 className="w-12 h-12 bg-[#1DB954] hover:bg-[#1ed760] text-black rounded-full shadow-lg transform hover:scale-110 transition-transform"
-                onClick={(e) => {
-                  e.preventDefault()
-                  // Handle play functionality
-                }}
+                onClick={handlePlay}
               >
                 <Play className="w-5 h-5 ml-0.5" fill="currentColor" />
               </Button>

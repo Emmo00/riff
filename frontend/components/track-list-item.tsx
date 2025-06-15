@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Play, Heart, MessageCircle, TrendingUp, MoreHorizontal, Calendar, Clock } from "lucide-react"
 import { useState } from "react"
+import { usePlayback } from "@/contexts/playback-context"
 
 interface Track {
   id: string
@@ -27,6 +28,7 @@ interface TrackListItemProps {
 export function TrackListItem({ track, index, isOwnProfile }: TrackListItemProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
+  const { dispatch } = usePlayback()
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -34,6 +36,18 @@ export function TrackListItem({ track, index, isOwnProfile }: TrackListItemProps
       month: "short",
       day: "numeric",
     })
+  }
+
+  const handlePlay = () => {
+    const trackForContext = {
+      id: track.id,
+      title: track.title,
+      artist: { id: "artist-1", name: "Unknown Artist", avatar: "/placeholder.svg" },
+      coverArt: track.coverArt,
+      duration: 222, // You'd get this from actual track data
+    }
+
+    dispatch({ type: "PLAY_TRACK", track: trackForContext })
   }
 
   return (
@@ -48,6 +62,7 @@ export function TrackListItem({ track, index, isOwnProfile }: TrackListItemProps
           <Button
             size="icon"
             className="w-8 h-8 bg-transparent hover:bg-[#1DB954] text-white hover:text-black rounded-full"
+            onClick={handlePlay}
           >
             <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
           </Button>

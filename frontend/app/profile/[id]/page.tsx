@@ -4,7 +4,7 @@ import { ProfileHeader } from "@/components/profile-header"
 import { UserTracks } from "@/components/user-tracks"
 
 // Mock user data - in a real app, this would come from your API/blockchain
-const getUserData = (id: string) => ({
+const getUserData = async  (id: string) => ({
   id,
   username: "CryptoBeats",
   bio: "Creating beats on the blockchain since 2021. Web3 music producer exploring the intersection of sound and decentralization.",
@@ -25,7 +25,7 @@ interface ProfilePageProps {
 }
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
-  const user = getUserData(await params.id)
+  const user = await getUserData((await params).id)
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">

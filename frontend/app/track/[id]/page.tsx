@@ -1,4 +1,4 @@
-import { TrackDetailModal } from "@/components/track-detail-modal"
+import { SpotifyStyleTrackPage } from "@/components/spotify-style-track-page"
 
 // Mock track data - in a real app, this would come from your API/blockchain
 const getTrackData = (id: string) => ({
@@ -10,10 +10,11 @@ const getTrackData = (id: string) => ({
     avatar: "/placeholder.svg?height=60&width=60",
   },
   coverArt: "/placeholder.svg?height=400&width=400",
+  duration: 222, // 3:42 in seconds
+  currentTime: 45, // Current playback position in seconds
+  isPlaying: false,
   uploadDate: "2024-01-15",
-  description:
-    "A chill electronic track perfect for late night coding sessions. Created with analog synthesizers and digital processing to capture that nostalgic yet futuristic vibe.",
-  duration: "3:42",
+  description: "A chill electronic track perfect for late night coding sessions.",
   stats: {
     playCount: 15420,
     likeCount: 1247,
@@ -30,8 +31,52 @@ const getTrackData = (id: string) => ({
     { id: "2", name: "BeatMaker", address: "0x8f3a21Dd...9234", share: 20 },
     { id: "3", name: "MixMaster", address: "0x1b4c56Ef...7890", share: 10 },
   ],
-  isOwnTrack: true, // This would be determined by comparing with current user
+  isOwnTrack: true,
 })
+
+// Mock playlist/queue data
+const getPlaylistQueue = () => [
+  {
+    id: "1",
+    title: "Midnight Vibes",
+    artist: "CryptoBeats",
+    coverArt: "/placeholder.svg?height=60&width=60",
+    duration: "3:42",
+    isCurrentTrack: true,
+  },
+  {
+    id: "2",
+    title: "Digital Dreams",
+    artist: "Web3Producer",
+    coverArt: "/placeholder.svg?height=60&width=60",
+    duration: "4:15",
+    isCurrentTrack: false,
+  },
+  {
+    id: "3",
+    title: "Blockchain Beats",
+    artist: "DecentralizedDJ",
+    coverArt: "/placeholder.svg?height=60&width=60",
+    duration: "2:58",
+    isCurrentTrack: false,
+  },
+  {
+    id: "4",
+    title: "NFT Anthem",
+    artist: "TokenTunes",
+    coverArt: "/placeholder.svg?height=60&width=60",
+    duration: "3:28",
+    isCurrentTrack: false,
+  },
+  {
+    id: "5",
+    title: "Metaverse Melody",
+    artist: "VirtualVibes",
+    coverArt: "/placeholder.svg?height=60&width=60",
+    duration: "5:12",
+    isCurrentTrack: false,
+  },
+]
 
 const getComments = () => [
   {
@@ -56,17 +101,6 @@ const getComments = () => [
     timestamp: "2024-01-16T08:15:00Z",
     isOwn: true,
   },
-  {
-    id: "3",
-    author: {
-      name: "ElectroFan",
-      address: "0x5a6b7c8d...9876",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    message: "The synth work around 2:30 is pure magic ✨",
-    timestamp: "2024-01-15T22:45:00Z",
-    isOwn: false,
-  },
 ]
 
 interface TrackPageProps {
@@ -77,7 +111,8 @@ interface TrackPageProps {
 
 export default function TrackPage({ params }: TrackPageProps) {
   const track = getTrackData(params.id)
+  const queue = getPlaylistQueue()
   const comments = getComments()
 
-  return <TrackDetailModal track={track} comments={comments} />
+  return <SpotifyStyleTrackPage track={track} queue={queue} comments={comments} />
 }
