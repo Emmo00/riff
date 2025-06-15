@@ -17,12 +17,6 @@ contract Riff is Ownable, ReentrancyGuard {
 
     uint256 public platformFeesAccumulated; // Track platform fees separately
 
-    // Action Identifiers
-    bytes32 constant ACTION_PLAY = keccak256("play");
-    bytes32 constant ACTION_LIKE = keccak256("like");
-    bytes32 constant ACTION_COMMENT = keccak256("comment");
-    bytes32 constant ACTION_BANGER = keccak256("banger");
-
     // Default/Base Action Fees
     struct DefaultFees {
         uint256 feePerPlay;
@@ -40,7 +34,6 @@ contract Riff is Ownable, ReentrancyGuard {
         string name;
         string bio;
         bool exists;
-        uint256 totalEarnings;
     }
 
     struct MusicTrack {
@@ -60,6 +53,7 @@ contract Riff is Ownable, ReentrancyGuard {
     }
 
     struct Contributor {
+        string name;
         address contributor;
         uint256 percentage;
     }
@@ -76,6 +70,13 @@ contract Riff is Ownable, ReentrancyGuard {
         address commenter;
         string message;
         uint256 timestamp;
+    }
+
+    enum ActionType {
+        PLAY,
+        LIKE,
+        COMMENT,
+        BANGER
     }
 
     // Mappings
@@ -104,7 +105,7 @@ contract Riff is Ownable, ReentrancyGuard {
     event ActionRecorded(
         uint256 indexed trackId,
         address indexed user,
-        string actionType
+        ActionType actionType
     );
     event CommentAdded(
         uint256 indexed trackId,
@@ -115,11 +116,12 @@ contract Riff is Ownable, ReentrancyGuard {
         uint256 indexed trackId,
         address indexed user,
         uint256 amount,
-        string actionType
+        ActionType actionType
     );
     event ContributorAdded(
         uint256 indexed trackId,
         address indexed contributor,
+        string name,
         uint256 percentage
     );
     event ContributorConfigured(
@@ -170,10 +172,9 @@ contract Riff is Ownable, ReentrancyGuard {
     }
 
     // Profile Management
-    function registerProfile(
-        string calldata name,
-        string calldata bio
-    ) external {
+    function registerProfile(string calldata name, string calldata bio)
+        external
+    {
         require(!profiles[msg.sender].exists, "Profile already exists");
         require(bytes(name).length > 0, "Name cannot be empty");
 
@@ -185,8 +186,7 @@ contract Riff is Ownable, ReentrancyGuard {
             owner: msg.sender,
             name: name,
             bio: bio,
-            exists: true,
-            totalEarnings: 0
+            exists: true
         });
 
         emit ProfileRegistered(msg.sender, newProfileId, name);
@@ -315,63 +315,65 @@ contract Riff is Ownable, ReentrancyGuard {
     }
 
     // Action Recording & Payment Processing
-    function recordAction(uint256 trackId, bytes calldata actionData) external {
+    function recordAction(
+        uint256 trackId,
+        ActionType actionType,
+        bytes calldata actionData
+    ) external {
         require(tracks[trackId].exists, "Track does not exist");
         require(!tracks[trackId].deleted, "Track is deleted");
-
-        (string memory actionType, bytes memory payload) = _decodeActionData(
-            actionData
-        );
 
         uint256 fee = _getActionFee(msg.sender, actionType);
 
         if (fee > 0) {
-            require(
-                paymentToken.transferFrom(msg.sender, address(this), fee),
-                "Payment failed"
-            );
+            _chargeUser(msg.sender, fee);
             _processPayment(trackId, fee);
             emit PaymentProcessed(trackId, msg.sender, fee, actionType);
         }
 
-        if (keccak256(bytes(actionType)) == keccak256("comment")) {
-            _storeComment(trackId, msg.sender, abi.decode(payload, (string)));
+        if (actionType == ActionType.COMMENT) {
+            _storeComment(
+                trackId,
+                msg.sender,
+                abi.decode(actionData, (string))
+            );
         }
 
         _updateTrackStats(trackId, actionType);
         emit ActionRecorded(trackId, msg.sender, actionType);
     }
 
-    function _decodeActionData(
-        bytes calldata actionData
-    ) internal pure returns (string memory actionType, bytes memory payload) {
-        (actionType, payload) = abi.decode(actionData, (string, bytes));
+    function _chargeUser(address user, uint256 amount) internal {
+        require(
+            paymentToken.transferFrom(user, address(this), amount),
+            "Payment failed"
+        );
     }
 
-    function _getActionFee(
-        address user,
-        string memory actionType
-    ) internal view returns (uint256) {
-        bytes32 actionHash = keccak256(bytes(actionType));
+    function _getActionFee(address user, ActionType actionType)
+        internal
+        view
+        returns (uint256)
+    {
+        uint256 fee;
 
         if (userActionFees[user].isSet) {
             UserActionFees memory fees = userActionFees[user];
-
-            if (actionHash == ACTION_PLAY) return fees.feePerPlay;
-            if (actionHash == ACTION_LIKE) return fees.feePerLike;
-            if (actionHash == ACTION_COMMENT) return fees.feePerComment;
-            if (actionHash == ACTION_BANGER) return fees.feeForBanger;
+            if (actionType == ActionType.PLAY) fee = fees.feePerPlay;
+            else if (actionType == ActionType.LIKE) fee = fees.feePerLike;
+            else if (actionType == ActionType.COMMENT) fee = fees.feePerComment;
+            else if (actionType == ActionType.BANGER) fee = fees.feeForBanger;
         } else {
-            // Use default fees if user-specific fees are not set
-            DefaultFees memory fees = defaultFees;
-
-            if (actionHash == ACTION_PLAY) return fees.feePerPlay;
-            if (actionHash == ACTION_LIKE) return fees.feePerLike;
-            if (actionHash == ACTION_COMMENT) return fees.feePerComment;
-            if (actionHash == ACTION_BANGER) return fees.feeForBanger;
+            if (actionType == ActionType.PLAY) fee = defaultFees.feePerPlay;
+            else if (actionType == ActionType.LIKE)
+                fee = defaultFees.feePerLike;
+            else if (actionType == ActionType.COMMENT)
+                fee = defaultFees.feePerComment;
+            else if (actionType == ActionType.BANGER)
+                fee = defaultFees.feeForBanger;
         }
 
-        return 0; // Unknown action, no fee
+        return fee;
     }
 
     function _storeComment(
@@ -392,19 +394,16 @@ contract Riff is Ownable, ReentrancyGuard {
         emit CommentAdded(trackId, commenter, message);
     }
 
-    function _updateTrackStats(
-        uint256 trackId,
-        string memory actionType
-    ) internal {
-        bytes32 actionHash = keccak256(abi.encodePacked(actionType));
-
-        if (actionHash == keccak256(abi.encodePacked("play"))) {
+    function _updateTrackStats(uint256 trackId, ActionType actionType)
+        internal
+    {
+        if (actionType == ActionType.PLAY) {
             tracks[trackId].playCount++;
-        } else if (actionHash == keccak256(abi.encodePacked("like"))) {
+        } else if (actionType == ActionType.LIKE) {
             tracks[trackId].likeCount++;
-        } else if (actionHash == keccak256(abi.encodePacked("comment"))) {
+        } else if (actionType == ActionType.COMMENT) {
             tracks[trackId].commentCount++;
-        } else if (actionHash == keccak256(abi.encodePacked("banger"))) {
+        } else if (actionType == ActionType.BANGER) {
             tracks[trackId].bangerCount++;
         }
     }
@@ -416,6 +415,13 @@ contract Riff is Ownable, ReentrancyGuard {
         platformFeesAccumulated += platformFee; // Track platform fees separately
         tracks[trackId].totalEarnings += artistAmount;
 
+        _distributeArtistAndContributorEarnings(trackId, artistAmount);
+    }
+
+    function _distributeArtistAndContributorEarnings(
+        uint256 trackId,
+        uint256 artistAmount
+    ) internal {
         Contributor[] memory contributors = trackContributors[trackId];
         if (contributors.length > 0) {
             uint256 remainingAmount = artistAmount;
@@ -433,13 +439,12 @@ contract Riff is Ownable, ReentrancyGuard {
         } else {
             trackEarnings[trackId][tracks[trackId].artist] += artistAmount;
         }
-
-        profiles[tracks[trackId].artist].totalEarnings += artistAmount;
     }
 
     // Contributor Management
     function addContributor(
         uint256 trackId,
+        string calldata name,
         address contributor,
         uint256 percentage
     ) external {
@@ -458,10 +463,14 @@ contract Riff is Ownable, ReentrancyGuard {
         require(totalPercentage <= MAX_BPS, "Total percentage exceeds 100%");
 
         trackContributors[trackId].push(
-            Contributor({contributor: contributor, percentage: percentage})
+            Contributor({
+                name: name,
+                contributor: contributor,
+                percentage: percentage
+            })
         );
 
-        emit ContributorAdded(trackId, contributor, percentage);
+        emit ContributorAdded(trackId, contributor, name, percentage);
     }
 
     function configureContributor(
@@ -497,9 +506,11 @@ contract Riff is Ownable, ReentrancyGuard {
     }
 
     // Earnings Management
-    function viewTrackEarnings(
-        uint256 trackId
-    ) external view returns (uint256) {
+    function viewTrackEarnings(uint256 trackId)
+        external
+        view
+        returns (uint256)
+    {
         return trackEarnings[trackId][msg.sender];
     }
 
@@ -522,21 +533,24 @@ contract Riff is Ownable, ReentrancyGuard {
             paymentToken.transferFrom(msg.sender, artist, amount),
             "Tip transfer failed"
         );
-        profiles[artist].totalEarnings += amount;
 
         emit ArtistTipped(artist, msg.sender, amount);
     }
 
     // View Functions
-    function getTrack(
-        uint256 trackId
-    ) external view returns (MusicTrack memory) {
+    function getTrack(uint256 trackId)
+        external
+        view
+        returns (MusicTrack memory)
+    {
         return tracks[trackId];
     }
 
-    function getTrackComments(
-        uint256 trackId
-    ) external view returns (Comment[] memory) {
+    function getTrackComments(uint256 trackId)
+        external
+        view
+        returns (Comment[] memory)
+    {
         return trackComments[trackId];
     }
 
@@ -544,9 +558,11 @@ contract Riff is Ownable, ReentrancyGuard {
         return profiles[user];
     }
 
-    function getUserFees(
-        address user
-    ) external view returns (UserActionFees memory) {
+    function getUserFees(address user)
+        external
+        view
+        returns (UserActionFees memory)
+    {
         return userActionFees[user];
     }
 
@@ -554,15 +570,19 @@ contract Riff is Ownable, ReentrancyGuard {
         return defaultFees;
     }
 
-    function getTrackContributors(
-        uint256 trackId
-    ) external view returns (Contributor[] memory) {
+    function getTrackContributors(uint256 trackId)
+        external
+        view
+        returns (Contributor[] memory)
+    {
         return trackContributors[trackId];
     }
 
-    function getArtistTracks(
-        address artist
-    ) external view returns (uint256[] memory) {
+    function getArtistTracks(address artist)
+        external
+        view
+        returns (uint256[] memory)
+    {
         return artistTracks[artist];
     }
 
