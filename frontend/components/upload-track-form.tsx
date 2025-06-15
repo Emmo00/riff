@@ -9,21 +9,25 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { FileUpload } from "@/components/file-upload"
-import { Loader2, Upload, CheckCircle } from "lucide-react"
+import { TagInput } from "@/components/tag-input"
+import { Loader2, Upload, CheckCircle, Hash } from "lucide-react"
 
 interface FormData {
   audioFile: File | null
   title: string
   description: string
   genre: string
+  tags: string[]
 }
 
 interface FormErrors {
   audioFile?: string
   title?: string
   genre?: string
+  tags?: string
 }
 
 const genres = [
@@ -47,6 +51,53 @@ const genres = [
   "Lo-fi",
 ]
 
+// Predefined popular tags for suggestions
+const popularTags = [
+  "chill",
+  "upbeat",
+  "emotional",
+  "energetic",
+  "relaxing",
+  "party",
+  "workout",
+  "study",
+  "driving",
+  "romantic",
+  "sad",
+  "happy",
+  "aggressive",
+  "mellow",
+  "atmospheric",
+  "danceable",
+  "instrumental",
+  "vocal",
+  "remix",
+  "original",
+  "collaboration",
+  "freestyle",
+  "live",
+  "acoustic",
+  "electric",
+  "synthesized",
+  "organic",
+  "digital",
+  "analog",
+  "vintage",
+  "modern",
+  "futuristic",
+  "nostalgic",
+  "dark",
+  "bright",
+  "heavy",
+  "light",
+  "fast",
+  "slow",
+  "melodic",
+  "rhythmic",
+  "harmonic",
+  "experimental",
+]
+
 export function UploadTrackForm() {
   const router = useRouter()
   const { toast } = useToast()
@@ -56,6 +107,7 @@ export function UploadTrackForm() {
     title: "",
     description: "",
     genre: "",
+    tags: [],
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
@@ -85,11 +137,22 @@ export function UploadTrackForm() {
       newErrors.genre = "Please select a genre"
     }
 
+    // Tags validation
+    if (formData.tags.length > 10) {
+      newErrors.tags = "Maximum 10 tags allowed"
+    }
+
+    // Validate individual tags
+    const invalidTags = formData.tags.filter((tag) => tag.length > 20 || tag.length < 2)
+    if (invalidTags.length > 0) {
+      newErrors.tags = "Tags must be between 2-20 characters"
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const handleInputChange = (field: keyof FormData, value: string | File | null) => {
+  const handleInputChange = (field: keyof FormData, value: string | File | null | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
     // Clear error when user makes changes
@@ -101,6 +164,10 @@ export function UploadTrackForm() {
   const handleFileSelect = useCallback((file: File | null) => {
     handleInputChange("audioFile", file)
   }, [])
+
+  const handleTagsChange = (tags: string[]) => {
+    handleInputChange("tags", tags)
+  }
 
   const simulateUploadProgress = () => {
     setUploadProgress(0)
@@ -133,7 +200,7 @@ export function UploadTrackForm() {
 
       toast({
         title: "Track Uploaded Successfully! 🎵",
-        description: `"${formData.title}" has been uploaded to the blockchain.`,
+        description: `"${formData.title}" has been uploaded to the blockchain with ${formData.tags.length} tags.`,
         duration: 5000,
       })
 
@@ -161,6 +228,18 @@ export function UploadTrackForm() {
         <CheckCircle className="w-20 h-20 text-[#1DB954] mx-auto mb-6" />
         <h2 className="text-2xl font-bold mb-2">Track Uploaded Successfully!</h2>
         <p className="text-gray-400 mb-4">Your track "{formData.title}" is now live on the blockchain.</p>
+        {formData.tags.length > 0 && (
+          <div className="mb-4">
+            <p className="text-sm text-gray-500 mb-2">Tags added:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {formData.tags.map((tag, index) => (
+                <Badge key={index} variant="secondary" className="bg-[#1DB954]/20 text-[#1DB954]">
+                  #{tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="animate-pulse text-sm text-gray-500">Redirecting to dashboard...</div>
       </div>
     )
@@ -219,6 +298,26 @@ export function UploadTrackForm() {
           </SelectContent>
         </Select>
         {errors.genre && <p className="text-red-400 text-sm">{errors.genre}</p>}
+      </div>
+
+      {/* Tags Section */}
+      <div className="space-y-2">
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <Hash className="w-4 h-4 text-[#1DB954]" />
+          Tags <span className="text-gray-500">(optional)</span>
+        </Label>
+        <TagInput
+          tags={formData.tags}
+          onTagsChange={handleTagsChange}
+          suggestions={popularTags}
+          maxTags={10}
+          placeholder="Add tags to help people discover your track..."
+        />
+        {errors.tags && <p className="text-red-400 text-sm">{errors.tags}</p>}
+        <div className="flex justify-between text-xs text-gray-500">
+          <span>Tags help listeners discover your music</span>
+          <span>{formData.tags.length}/10 tags</span>
+        </div>
       </div>
 
       {/* Description */}

@@ -15,6 +15,7 @@ const getTrackData = (id: string) => ({
   isPlaying: false,
   uploadDate: "2024-01-15",
   description: "A chill electronic track perfect for late night coding sessions.",
+  tags: ["chill", "electronic", "ambient", "coding", "late-night", "atmospheric"], // Add sample tags
   stats: {
     playCount: 15420,
     likeCount: 1247,

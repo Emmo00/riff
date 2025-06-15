@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { CommentSection } from "@/components/comment-section"
 import { RevenuePanel } from "@/components/revenue-panel"
 import { ContributorPanel } from "@/components/contributor-panel"
 import { useToast } from "@/hooks/use-toast"
-import { ArrowLeft, Play, Heart, MessageCircle, TrendingUp, Calendar, Clock, Share } from "lucide-react"
+import { ArrowLeft, Play, Heart, MessageCircle, TrendingUp, Calendar, Clock, Share, Hash } from "lucide-react"
 
 interface Track {
   id: string
@@ -23,6 +24,7 @@ interface Track {
   uploadDate: string
   description: string
   duration: string
+  tags?: string[] // Add tags to track interface
   stats: {
     playCount: number
     likeCount: number
@@ -187,6 +189,27 @@ export function TrackDetailModal({ track, comments }: TrackDetailModalProps) {
                     <span>{track.duration}</span>
                   </div>
                 </div>
+
+                {/* Tags */}
+                {track.tags && track.tags.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Hash className="w-4 h-4 text-[#1DB954]" />
+                      <span className="text-sm font-medium text-gray-400">Tags</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {track.tags.map((tag, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/30 hover:bg-[#1DB954]/30 transition-colors cursor-pointer"
+                        >
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Description */}
                 {track.description && <p className="text-gray-300 leading-relaxed">{track.description}</p>}

@@ -23,3 +23,39 @@ Riff redefines music streaming by combining blockchain transparency with AI-driv
 The integration of AI co-agents empowers Riff to provide smart playlist curation, user behavior analysis, and adaptive tipping policies that respond to fan engagement patterns in real time. This AI-native feature enhances discoverability and creates a more rewarding ecosystem for both artists and listeners.
 
 The platform’s blend of real-time blockchain execution, AI automation, and community-driven incentives excites us because it builds a truly open, equitable future for music where fans and creators thrive together.
+
+Here’s a disciplined and future-proof structure for the **track metadata** uploaded to IPFS in your app (`Riff`). It aligns with open media metadata standards, supports rich features like contributors, and is easily expandable:
+
+---
+
+### 🗂️ Track Metadata Structure (JSON)
+
+```json
+{
+  "version": "1.0.0",
+  "type": "music-track",
+  "title": "Euphoria",
+  "description": "An energetic electronic beat inspired by the 90s.",
+  "genre": "Electronic",
+  "duration": 212,                     // In seconds
+  "coverImage": "ipfs://CID/cover.jpg",
+  "audio": "ipfs://CID/audio.mp3",
+  "bpm": 128,                          // Optional
+  "key": "C#m",                        // Optional
+  "releaseDate": "2025-06-01T00:00:00Z",
+
+  "artist": {
+    "address": "0xArtistAddress",
+    "name": "Syntha"
+  },
+
+  "tags": ["electronic", "90s", "banger"],
+  "lyrics": "",                        // Optional, plain text or markdown
+
+//   "external": {
+//     "spotify": "https://...",
+//     "youtube": "https://...",
+//     "website": "https://..."
+//   }
+}
+```

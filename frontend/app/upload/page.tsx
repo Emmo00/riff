@@ -9,11 +9,11 @@ export default function UploadPage() {
       <div className="border-b border-gray-800 bg-[#121212]/95 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <Link
-            href="/dashboard"
+            href="/"
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Dashboard
+            Back
           </Link>
         </div>
       </div>

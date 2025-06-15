@@ -33,6 +33,8 @@ contract Riff is Ownable, ReentrancyGuard {
         address owner;
         string name;
         string bio;
+        uint256 followersCount;
+        uint256 followingCount;
         bool exists;
     }
 
@@ -87,6 +89,7 @@ contract Riff is Ownable, ReentrancyGuard {
     mapping(uint256 => mapping(address => uint256)) public trackEarnings;
     mapping(address => uint256[]) public artistTracks;
     mapping(uint256 => Comment[]) public trackComments;
+    mapping(address => mapping(address => bool)) public isFollowing; // User -> Followed User -> Status
 
     // Events
     event ProfileRegistered(
@@ -95,6 +98,10 @@ contract Riff is Ownable, ReentrancyGuard {
         string name
     );
     event ProfileUpdated(address indexed user, string name, string bio);
+    event ProfileFollowed(
+        address indexed follower,
+        address indexed followed
+    );
     event TrackUploaded(
         uint256 indexed trackId,
         address indexed artist,
@@ -186,10 +193,32 @@ contract Riff is Ownable, ReentrancyGuard {
             owner: msg.sender,
             name: name,
             bio: bio,
+            followersCount: 0,
+            followingCount: 0,
             exists: true
         });
 
         emit ProfileRegistered(msg.sender, newProfileId, name);
+    }
+
+    function followUser(address userToFollow) external {
+        require(userToFollow != msg.sender, "Cannot follow yourself");
+        require(profiles[userToFollow].exists, "User profile does not exist");
+        require(!isFollowing[msg.sender][userToFollow], "Already following");
+
+        isFollowing[msg.sender][userToFollow] = true;
+        profiles[userToFollow].followersCount++;
+        profiles[msg.sender].followingCount++;
+
+        emit ProfileFollowed(msg.sender, userToFollow);
+    }
+
+    function unfollowUser(address userToUnfollow) external {
+        require(isFollowing[msg.sender][userToUnfollow], "Not following user");
+
+        isFollowing[msg.sender][userToUnfollow] = false;
+        profiles[userToUnfollow].followersCount--;
+        profiles[msg.sender].followingCount--;
     }
 
     function updateProfile(string calldata name, string calldata bio) external {
