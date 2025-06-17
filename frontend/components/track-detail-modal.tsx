@@ -133,11 +133,11 @@ export function TrackDetailModal({ track, comments }: TrackDetailModalProps) {
         {/* Header */}
         <div className="sticky top-0 z-10 bg-[#121212]/95 backdrop-blur-sm border-b border-gray-800">
           <div className="flex items-center justify-between p-4">
-            <Button onClick={handleClose} size="icon" className="bg-transparent hover:bg-white/10 text-white">
+            <Button onClick={handleClose}  className="bg-transparent hover:bg-white/10 text-white">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <h1 className="text-lg font-semibold truncate mx-4">{track.title}</h1>
-            <Button onClick={handleShare} size="icon" className="bg-transparent hover:bg-white/10 text-white">
+            <Button onClick={handleShare}  className="bg-transparent hover:bg-white/10 text-white">
               <Share className="w-5 h-5" />
             </Button>
           </div>
@@ -201,7 +201,7 @@ export function TrackDetailModal({ track, comments }: TrackDetailModalProps) {
                       {track.tags.map((tag, index) => (
                         <Badge
                           key={index}
-                          variant="secondary"
+                          
                           className="bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/30 hover:bg-[#1DB954]/30 transition-colors cursor-pointer"
                         >
                           #{tag}
@@ -226,7 +226,7 @@ export function TrackDetailModal({ track, comments }: TrackDetailModalProps) {
 
                   <Button
                     onClick={handleLike}
-                    variant="outline"
+                    
                     className={`border-gray-600 hover:border-[#1DB954] ${
                       isLiked ? "bg-[#1DB954]/20 border-[#1DB954] text-[#1DB954]" : "text-white"
                     }`}
@@ -237,7 +237,7 @@ export function TrackDetailModal({ track, comments }: TrackDetailModalProps) {
 
                   <Button
                     onClick={() => setShowComments(!showComments)}
-                    variant="outline"
+                    
                     className="border-gray-600 hover:border-[#1DB954] text-white"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
@@ -246,7 +246,7 @@ export function TrackDetailModal({ track, comments }: TrackDetailModalProps) {
 
                   <Button
                     onClick={handleBanger}
-                    variant="outline"
+                    
                     className={`border-gray-600 hover:border-orange-500 ${
                       isBanger ? "bg-orange-500/20 border-orange-500 text-orange-500" : "text-white"
                     }`}

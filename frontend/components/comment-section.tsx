@@ -152,7 +152,7 @@ export function CommentSection({ comments, isVisible, onToggle }: CommentSection
                       {comment.isOwn && (
                         <Button
                           onClick={() => handleDelete(comment.id)}
-                          size="icon"
+                          
                           className="w-6 h-6 bg-transparent hover:bg-red-500/20 text-gray-400 hover:text-red-400"
                         >
                           <Trash2 className="w-3 h-3" />

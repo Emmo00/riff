@@ -99,7 +99,7 @@ export function AIDiscoveryCard({ onSearch }: AIDiscoveryCardProps) {
               <Button
                 onClick={handleGenerate}
                 disabled={isGenerating || !prompt.trim()}
-                size="icon"
+                
                 className="absolute right-1 top-1 h-10 w-10 bg-[#1DB954] hover:bg-[#1ed760] text-black"
               >
                 {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

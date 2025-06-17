@@ -202,10 +202,10 @@ export function SpotifyStyleTrackPage({ track, queue, comments }: SpotifyStyleTr
       {/* Header */}
       <div className="sticky top-0 z-10 bg-[#121212]/95 backdrop-blur-sm border-b border-gray-800">
         <div className="flex items-center justify-between p-4">
-          <Button onClick={handleBack} size="icon" className="bg-transparent hover:bg-white/10 text-white">
+          <Button onClick={handleBack}  className="bg-transparent hover:bg-white/10 text-white">
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <Button onClick={handleShare} size="icon" className="bg-transparent hover:bg-white/10 text-white">
+          <Button onClick={handleShare}  className="bg-transparent hover:bg-white/10 text-white">
             <Share className="w-5 h-5" />
           </Button>
         </div>
@@ -246,7 +246,7 @@ export function SpotifyStyleTrackPage({ track, queue, comments }: SpotifyStyleTr
           <div className="flex items-center justify-center gap-6">
             <Button
               onClick={handlePrevious}
-              size="icon"
+              
               className="w-12 h-12 bg-transparent hover:bg-white/10 text-white"
             >
               <SkipBack className="w-6 h-6" />
@@ -254,13 +254,13 @@ export function SpotifyStyleTrackPage({ track, queue, comments }: SpotifyStyleTr
 
             <Button
               onClick={handlePlayPause}
-              size="icon"
+              
               className="w-16 h-16 bg-[#1DB954] hover:bg-[#1ed760] text-black"
             >
               {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" fill="currentColor" />}
             </Button>
 
-            <Button onClick={handleNext} size="icon" className="w-12 h-12 bg-transparent hover:bg-white/10 text-white">
+            <Button onClick={handleNext}  className="w-12 h-12 bg-transparent hover:bg-white/10 text-white">
               <SkipForward className="w-6 h-6" />
             </Button>
           </div>
@@ -320,7 +320,7 @@ export function SpotifyStyleTrackPage({ track, queue, comments }: SpotifyStyleTr
         <div className="flex flex-wrap justify-center gap-3">
           <Button
             onClick={handleLike}
-            variant="outline"
+            
             className={`border-gray-600 hover:border-[#1DB954] ${
               isLiked ? "bg-[#1DB954]/20 border-[#1DB954] text-[#1DB954]" : "text-white"
             }`}
@@ -331,7 +331,7 @@ export function SpotifyStyleTrackPage({ track, queue, comments }: SpotifyStyleTr
 
           <Button
             onClick={() => setShowComments(!showComments)}
-            variant="outline"
+            
             className="border-gray-600 hover:border-[#1DB954] text-white"
           >
             <MessageCircle className="w-4 h-4 mr-2" />
@@ -340,7 +340,7 @@ export function SpotifyStyleTrackPage({ track, queue, comments }: SpotifyStyleTr
 
           <Button
             onClick={handleBanger}
-            variant="outline"
+            
             className={`border-gray-600 hover:border-orange-500 ${
               isBanger ? "bg-orange-500/20 border-orange-500 text-orange-500" : "text-white"
             }`}
@@ -351,7 +351,7 @@ export function SpotifyStyleTrackPage({ track, queue, comments }: SpotifyStyleTr
 
           <Button
             onClick={handleTip}
-            variant="outline"
+            
             className="border-gray-600 hover:border-yellow-500 text-white hover:text-yellow-500"
           >
             <DollarSign className="w-4 h-4 mr-2" />

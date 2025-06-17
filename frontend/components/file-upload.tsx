@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { useDropzone } from "react-dropzone"
+import { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button"
 import { Upload, Music, X, FileAudio } from "lucide-react"
 
@@ -62,7 +62,7 @@ export function FileUpload({ onFileSelect, error }: FileUploadProps) {
           <Button
             type="button"
             onClick={removeFile}
-            size="icon"
+            
             className="w-8 h-8 bg-red-500/20 hover:bg-red-500/30 text-red-400 hover:text-red-300"
           >
             <X className="w-4 h-4" />

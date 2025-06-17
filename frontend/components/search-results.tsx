@@ -55,7 +55,7 @@ export function SearchResults({ query, onClear }: SearchResultsProps) {
         <h2 className="text-xl font-bold">Results for "{query}"</h2>
         <Button
           onClick={onClear}
-          size="icon"
+          
           className="bg-transparent hover:bg-white/10 text-gray-400 hover:text-white"
         >
           <X className="w-5 h-5" />
@@ -87,7 +87,7 @@ export function SearchResults({ query, onClear }: SearchResultsProps) {
                         <p className="text-sm text-gray-400 truncate">{track.artist}</p>
                         <p className="text-xs text-gray-500">{track.duration}</p>
                       </div>
-                      <Button size="icon" className="w-10 h-10 bg-[#1DB954] hover:bg-[#1ed760] text-black">
+                      <Button  className="w-10 h-10 bg-[#1DB954] hover:bg-[#1ed760] text-black">
                         <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
                       </Button>
                     </div>
@@ -125,7 +125,7 @@ export function SearchResults({ query, onClear }: SearchResultsProps) {
                         <p className="text-xs text-gray-500">Artist</p>
                       </div>
                       <Button
-                        variant="outline"
+                        
                         className="border-gray-600 hover:border-[#1DB954] text-white hover:bg-[#1DB954]/20"
                       >
                         Follow

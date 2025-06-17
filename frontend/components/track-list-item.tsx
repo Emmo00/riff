@@ -60,7 +60,7 @@ export function TrackListItem({ track, index, isOwnProfile }: TrackListItemProps
       <div className="w-8 flex items-center justify-center">
         {isHovered ? (
           <Button
-            size="icon"
+            
             className="w-8 h-8 bg-transparent hover:bg-[#1DB954] text-white hover:text-black rounded-full"
             onClick={handlePlay}
           >
@@ -122,7 +122,7 @@ export function TrackListItem({ track, index, isOwnProfile }: TrackListItemProps
 
       {/* More Options */}
       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button size="icon" className="w-8 h-8 bg-transparent hover:bg-[#1a1a1a] text-gray-400 hover:text-white">
+        <Button  className="w-8 h-8 bg-transparent hover:bg-[#1a1a1a] text-gray-400 hover:text-white">
           <MoreHorizontal className="w-4 h-4" />
         </Button>
       </div>

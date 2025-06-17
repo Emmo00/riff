@@ -126,7 +126,7 @@ export function MiniPlayer() {
           <div className="flex items-center gap-2">
             <Button
               onClick={handlePlayPause}
-              size="icon"
+              
               className="w-10 h-10 bg-transparent hover:bg-white/10 text-white"
             >
               {state.isPlaying ? (
@@ -138,7 +138,7 @@ export function MiniPlayer() {
 
             <Button
               onClick={handleNext}
-              size="icon"
+              
               className="w-10 h-10 bg-transparent hover:bg-white/10 text-white"
               disabled={state.currentIndex >= state.queue.length - 1}
             >
@@ -147,7 +147,7 @@ export function MiniPlayer() {
 
             <Button
               onClick={handleClose}
-              size="icon"
+              
               className="w-8 h-8 bg-transparent hover:bg-white/10 text-gray-400 hover:text-white"
             >
               <X className="w-4 h-4" />

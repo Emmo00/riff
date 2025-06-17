@@ -50,7 +50,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
             {/* Profile Info */}
             <div className="flex-1 min-w-0">
               <div className="mb-2">
-                <Badge variant="secondary" className="bg-[#1DB954] text-black font-semibold mb-2">
+                <Badge  className="bg-[#1DB954] text-black font-semibold mb-2">
                   Artist
                 </Badge>
               </div>

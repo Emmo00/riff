@@ -70,7 +70,7 @@ export function TrackCard({ track }: TrackCardProps) {
               }`}
             >
               <Button
-                size="icon"
+                
                 className="w-12 h-12 bg-[#1DB954] hover:bg-[#1ed760] text-black rounded-full shadow-lg transform hover:scale-110 transition-transform"
                 onClick={handlePlay}
               >

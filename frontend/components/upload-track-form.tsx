@@ -233,7 +233,7 @@ export function UploadTrackForm() {
             <p className="text-sm text-gray-500 mb-2">Tags added:</p>
             <div className="flex flex-wrap justify-center gap-2">
               {formData.tags.map((tag, index) => (
-                <Badge key={index} variant="secondary" className="bg-[#1DB954]/20 text-[#1DB954]">
+                <Badge key={index}  className="bg-[#1DB954]/20 text-[#1DB954]">
                   #{tag}
                 </Badge>
               ))}
@@ -281,7 +281,7 @@ export function UploadTrackForm() {
         <Label className="text-sm font-medium">
           Genre <span className="text-red-400">*</span>
         </Label>
-        <Select value={formData.genre} onValueChange={(value) => handleInputChange("genre", value)}>
+        <Select value={formData.genre} onValueChange={(value :any) => handleInputChange("genre", value)}>
           <SelectTrigger
             className={`bg-[#2a2a2a] border-gray-600 text-white focus:border-[#1DB954] focus:ring-[#1DB954] ${
               errors.genre ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""

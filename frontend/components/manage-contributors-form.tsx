@@ -262,7 +262,7 @@ export function ManageContributorsForm({ track, initialContributors }: ManageCon
                 <span>•</span>
                 <span>CID: {truncateAddress(track.cid)}</span>
                 <Button
-                  size="icon"
+                  
                   onClick={() => copyToClipboard(track.cid)}
                   className="w-6 h-6 bg-transparent hover:bg-white/10 text-gray-400 hover:text-white"
                 >
@@ -283,7 +283,6 @@ export function ManageContributorsForm({ track, initialContributors }: ManageCon
               Revenue Allocation
             </div>
             <Badge
-              variant={remainingPercentage === 0 ? "default" : "secondary"}
               className={remainingPercentage === 0 ? "bg-[#1DB954] text-black" : "bg-yellow-500/20 text-yellow-400"}
             >
               {remainingPercentage}% remaining
@@ -348,14 +347,14 @@ export function ManageContributorsForm({ track, initialContributors }: ManageCon
                   <div className="flex items-center gap-2 mb-1">
                     <p className="font-medium text-white">{contributor.name}</p>
                     {contributor.isOwner && <Badge className="bg-[#1DB954]/20 text-[#1DB954] text-xs">Owner</Badge>}
-                    <Badge variant="outline" className="text-xs">
+                    <Badge  className="text-xs">
                       {contributor.role}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
                     <p className="text-xs text-gray-500 font-mono">{truncateAddress(contributor.address)}</p>
                     <Button
-                      size="icon"
+                      
                       onClick={() => copyToClipboard(contributor.address)}
                       className="w-4 h-4 bg-transparent hover:bg-white/10 text-gray-400 hover:text-white"
                     >
@@ -377,7 +376,7 @@ export function ManageContributorsForm({ track, initialContributors }: ManageCon
                     />
                     <span className="text-sm text-gray-400">%</span>
                     <Button
-                      size="icon"
+                      
                       onClick={() => handleEditPercentage(contributor.id)}
                       disabled={isLoading}
                       className="w-8 h-8 bg-[#1DB954] hover:bg-[#1ed760] text-black"
@@ -385,7 +384,7 @@ export function ManageContributorsForm({ track, initialContributors }: ManageCon
                       <CheckCircle className="w-4 h-4" />
                     </Button>
                     <Button
-                      size="icon"
+                      
                       onClick={() => {
                         setEditingId(null)
                         setEditPercentage("")
@@ -403,7 +402,7 @@ export function ManageContributorsForm({ track, initialContributors }: ManageCon
                     {!contributor.isOwner && (
                       <div className="flex gap-1">
                         <Button
-                          size="icon"
+                          
                           onClick={() => {
                             setEditingId(contributor.id)
                             setEditPercentage(contributor.percentage.toString())
@@ -414,7 +413,7 @@ export function ManageContributorsForm({ track, initialContributors }: ManageCon
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button
-                          size="icon"
+                          
                           onClick={() => handleRemoveContributor(contributor.id)}
                           disabled={isLoading}
                           className="w-8 h-8 bg-transparent hover:bg-red-500/20 text-gray-400 hover:text-red-400"
