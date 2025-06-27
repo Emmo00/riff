@@ -33,6 +33,7 @@ contract Riff is Ownable, ReentrancyGuard {
         address owner;
         string name;
         string bio;
+        string profilePic; // New field for profile picture (e.g., IPFS CID or URL)
         uint256 followersCount;
         uint256 followingCount;
         bool exists;
@@ -95,9 +96,15 @@ contract Riff is Ownable, ReentrancyGuard {
     event ProfileRegistered(
         address indexed user,
         uint256 profileId,
-        string name
+        string name,
+        string profilePic
     );
-    event ProfileUpdated(address indexed user, string name, string bio);
+    event ProfileUpdated(
+        address indexed user,
+        string name,
+        string bio,
+        string profilePic
+    );
     event ProfileFollowed(
         address indexed follower,
         address indexed followed
@@ -179,9 +186,11 @@ contract Riff is Ownable, ReentrancyGuard {
     }
 
     // Profile Management
-    function registerProfile(string calldata name, string calldata bio)
-        external
-    {
+    function registerProfile(
+        string calldata name,
+        string calldata bio,
+        string calldata profilePic
+    ) external {
         require(!profiles[msg.sender].exists, "Profile already exists");
         require(bytes(name).length > 0, "Name cannot be empty");
 
@@ -193,12 +202,13 @@ contract Riff is Ownable, ReentrancyGuard {
             owner: msg.sender,
             name: name,
             bio: bio,
+            profilePic: profilePic,
             followersCount: 0,
             followingCount: 0,
             exists: true
         });
 
-        emit ProfileRegistered(msg.sender, newProfileId, name);
+        emit ProfileRegistered(msg.sender, newProfileId, name, profilePic);
     }
 
     function followUser(address userToFollow) external {
@@ -221,14 +231,19 @@ contract Riff is Ownable, ReentrancyGuard {
         profiles[msg.sender].followingCount--;
     }
 
-    function updateProfile(string calldata name, string calldata bio) external {
+    function updateProfile(
+        string calldata name,
+        string calldata bio,
+        string calldata profilePic
+    ) external {
         require(profiles[msg.sender].exists, "Profile does not exist");
         require(bytes(name).length > 0, "Name cannot be empty");
 
         profiles[msg.sender].name = name;
         profiles[msg.sender].bio = bio;
+        profiles[msg.sender].profilePic = profilePic;
 
-        emit ProfileUpdated(msg.sender, name, bio);
+        emit ProfileUpdated(msg.sender, name, bio, profilePic);
     }
 
     // Track Management

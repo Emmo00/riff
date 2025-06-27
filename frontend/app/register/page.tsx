@@ -6,14 +6,6 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-[#121212] text-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Back Link */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8 group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Home
-        </Link>
 
         {/* Main Card */}
         <div className="bg-[#181818] rounded-2xl p-8 shadow-2xl border border-gray-800">
@@ -29,14 +21,6 @@ export default function RegisterPage() {
           {/* Form */}
           <RegisterForm />
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-gray-500 text-sm mt-6">
-          Already have a profile?{" "}
-          <Link href="/login" className="text-[#1DB954] hover:underline">
-            Sign in here
-          </Link>
-        </p>
       </div>
     </div>
   )

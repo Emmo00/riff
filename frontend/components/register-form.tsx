@@ -13,6 +13,7 @@ import { Loader2, CheckCircle } from "lucide-react"
 interface FormData {
   name: string
   bio: string
+  profilePic: File | null // Change to File for file input
 }
 
 interface FormErrors {
@@ -24,6 +25,7 @@ export function RegisterForm() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     bio: "",
+    profilePic: null
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [isLoading, setIsLoading] = useState(false)
@@ -47,11 +49,13 @@ export function RegisterForm() {
       newErrors.bio = "Bio must be less than 500 characters"
     }
 
+    // Add validation for profilePic if needed (optional, e.g., required or file type/size)
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
+  const handleInputChange = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
     // Clear error when user starts typing
@@ -150,6 +154,23 @@ export function RegisterForm() {
         />
         {errors.bio && <p className="text-red-400 text-sm flex items-center gap-1">{errors.bio}</p>}
         <div className="text-right text-xs text-gray-500">{formData.bio.length}/500</div>
+      </div>
+
+      {/* Profile Picture Field */}
+      <div className="space-y-2">
+        <Label htmlFor="profilePic" className="text-sm font-medium">
+          Profile Picture <span className="text-gray-500">(Image file, IPFS upload recommended)</span>
+        </Label>
+        <Input
+          id="profilePic"
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleInputChange("profilePic", e.target.files ? e.target.files[0] : null)}
+          className="bg-[#2a2a2a] border-gray-600 text-white focus:border-[#1DB954] focus:ring-[#1DB954]"
+        />
+        {formData.profilePic && (
+          <div className="text-xs text-gray-500">Selected: {formData.profilePic.name}</div>
+        )}
       </div>
 
       {/* Submit Button */}
