@@ -59,8 +59,10 @@ export function RegisterForm() {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
     // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }))
+    if (field === "name" || field === "bio") {
+      if (errors[field]) {
+        setErrors((prev) => ({ ...prev, [field]: undefined }))
+      }
     }
   }
 

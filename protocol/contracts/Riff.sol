@@ -33,7 +33,7 @@ contract Riff is Ownable, ReentrancyGuard {
         address owner;
         string name;
         string bio;
-        string profilePic; // New field for profile picture (e.g., IPFS CID or URL)
+        string profilePic; // profile picture (e.g., IPFS CID or URL)
         uint256 followersCount;
         uint256 followingCount;
         bool exists;
@@ -45,6 +45,7 @@ contract Riff is Ownable, ReentrancyGuard {
         string cid;
         string title;
         string description;
+        string[] tags; // New field: list of tags
         uint256 uploadTime;
         bool exists;
         bool deleted;
@@ -250,7 +251,8 @@ contract Riff is Ownable, ReentrancyGuard {
     function uploadTrack(
         string calldata cid,
         string calldata title,
-        string calldata description
+        string calldata description,
+        string[] calldata tags
     ) external returns (uint256) {
         require(profiles[msg.sender].exists, "Must register profile first");
         require(bytes(cid).length > 0, "CID cannot be empty");
@@ -265,6 +267,7 @@ contract Riff is Ownable, ReentrancyGuard {
             cid: cid,
             title: title,
             description: description,
+            tags: tags,
             uploadTime: block.timestamp,
             exists: true,
             deleted: false,

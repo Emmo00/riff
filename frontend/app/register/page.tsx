@@ -1,6 +1,6 @@
 import { RegisterForm } from "@/components/register-form"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+// import Link from "next/link"
+// import { ArrowLeft } from "lucide-react"
 
 export default function RegisterPage() {
   return (
